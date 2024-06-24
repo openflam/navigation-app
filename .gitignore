@@ -1,0 +1,8 @@
+# Ignore all data files
+data
+
+# Ignore all temporary files
+temp*
+
+# Python compiled files
+*.pyc

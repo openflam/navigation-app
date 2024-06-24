@@ -1,0 +1,9 @@
+services:
+  navigation-app:
+    build: .
+    command: tail -F anything
+    volumes:
+      - ./:/code
+    ports:
+      - 9800:9800 # Flask server
+      - 8888:8888 # Jupyter notebook
