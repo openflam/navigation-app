@@ -6,4 +6,4 @@ services:
       - ./:/code
     ports:
       - 9800:9800 # Flask server
-      - 8888:8888 # Jupyter notebook
+      - 8889:8889 # Jupyter notebook

@@ -10,4 +10,4 @@ Navigation application that uses OpenVPS architecture.
 To run jupyter lab inside the docker container: 
 - Get the container ID by running `docker ps`.
 - Attach the terminal to the container bu running: `docker exec -it <container_id> bash`.
-- Once inside the container, run: `jupyter lab --allow-root --ip 0.0.0.0`.
+- Once inside the container, run: `jupyter lab --allow-root --ip 0.0.0.0 --port 8889`.
