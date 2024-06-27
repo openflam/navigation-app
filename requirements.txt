@@ -2,3 +2,4 @@ networkx
 jupyterlab
 numpy
 pandas
+flask

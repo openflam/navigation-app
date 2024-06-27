@@ -1,7 +1,7 @@
 services:
   navigation-app:
     build: .
-    command: tail -F anything
+    command: flask --app src/server run --host 0.0.0.0 --port 9800
     volumes:
       - ./:/code
     ports:
