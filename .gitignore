@@ -3,6 +3,7 @@ data
 
 # Ignore all temporary files
 temp*
+!templates
 
 # Python compiled files
 *.pyc

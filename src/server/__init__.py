@@ -24,6 +24,9 @@ def create_app(test_config=None):
     shared_data['mapname_to_df'] = mapname_to_df
     
     # Register routes
+    from .routes import main
+    app.register_blueprint(main.bp)
+
     from .routes import shortest_path
     app.register_blueprint(shortest_path.bp)
     

@@ -1,0 +1,23 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets id="network_assets"></a-assets>
+
+        <a-entity id="camera" camera look-controls>
+            <a-text id="debug_text" value="Debug Text" geometry="primitive: plane; width: 2.5; height: 1;"
+                material="color: black;" position="0 1.5 -6" align="right" color="white" width="4" height="4">
+            </a-text>
+        </a-entity>
+    </a-scene>
+
+    <script src="{{ url_for('static', filename = 'scripts/openvps/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'scripts/navigation/render_nav_path.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'scripts/openvps/camera_frames_sender.js') }}"></script>
+</body>
+
+</html>
