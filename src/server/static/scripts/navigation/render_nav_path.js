@@ -23,27 +23,43 @@ async function getNavigationPath(localizationURL, localizationPose) {
     return navigationPath;
 }
 
+
 async function renderNavigationPath(localizationURL, localizationPose) {
     var navigationPath = await getNavigationPath(localizationURL, localizationPose);
     console.log(navigationPath);
     navigationPath_debug = navigationPath;
 
+    // Generate navigation path entity
+    var navGraphEntity = document.createElement('a-entity');
+    navGraphEntity.setAttribute('id', 'navGraph');
+
+    // Add nav markers to the navGraphEntity
     var local_path = navigationPath.local_path;
     for (let i = 0; i < local_path.length; i++) {
         var nav_marker = local_path[i];
         var nav_marker_name = nav_marker[0];
         var nav_marker_position = nav_marker[1];
 
-        var nav_marker_entity = document.createElement('a-box');
-        nav_marker_entity.setAttribute('width', 1);
-        nav_marker_entity.setAttribute('height', 1);
-        nav_marker_entity.setAttribute('depth', 1);
+        var nav_marker_entity = document.createElement('a-sphere');
+        nav_marker_entity.setAttribute('id', nav_marker_name);
+        nav_marker_entity.setAttribute('radius', 0.3);
+        // The navmarkers are in z-up coordinates, so we need to convert them to y-up
         nav_marker_entity.object3D.position.set(
             nav_marker_position[0], 
-            nav_marker_position[1], 
-            nav_marker_position[2]
+            nav_marker_position[2], 
+            -nav_marker_position[1]
         );
-
-        scene.appendChild(nav_marker_entity);
+        navGraphEntity.appendChild(nav_marker_entity);
+        
     }
+
+    // Update the pose of the navGraphEntity
+    apply_pose_matrix(navGraphEntity.object3D, localizationPose);
+
+    // If the navGraph already exists, remove it
+    var old_navGraph = document.getElementById('navGraph');
+    if (old_navGraph) {
+        scene.removeChild(old_navGraph);
+    }
+    scene.appendChild(navGraphEntity);
 }
