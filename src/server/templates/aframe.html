@@ -2,9 +2,13 @@
 
 <head>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <!-- Look-at component for navmarker text so it can always look at the camera-->
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
 </head>
 
 <body>
+    <script src="{{ url_for('static', filename = 'scripts/navigation/components/nav_marker.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'scripts/navigation/components/arrow.js') }}"></script>
     <a-scene>
         <a-assets id="network_assets"></a-assets>
 

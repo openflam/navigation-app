@@ -24,11 +24,7 @@ async function getNavigationPath(localizationURL, localizationPose) {
 }
 
 
-async function renderNavigationPath(localizationURL, localizationPose) {
-    var navigationPath = await getNavigationPath(localizationURL, localizationPose);
-    console.log(navigationPath);
-    navigationPath_debug = navigationPath;
-
+function createNavGraphEntity(navigationPath) {
     // Generate navigation path entity
     var navGraphEntity = document.createElement('a-entity');
     navGraphEntity.setAttribute('id', 'navGraph');
@@ -40,9 +36,9 @@ async function renderNavigationPath(localizationURL, localizationPose) {
         var nav_marker_name = nav_marker[0];
         var nav_marker_position = nav_marker[1];
 
-        var nav_marker_entity = document.createElement('a-sphere');
+        var nav_marker_entity = document.createElement('a-entity');
         nav_marker_entity.setAttribute('id', nav_marker_name);
-        nav_marker_entity.setAttribute('radius', 0.3);
+        nav_marker_entity.setAttribute('navmarker', {name: nav_marker_name});
         // The navmarkers are in z-up coordinates, so we need to convert them to y-up
         nav_marker_entity.object3D.position.set(
             nav_marker_position[0], 
@@ -50,8 +46,35 @@ async function renderNavigationPath(localizationURL, localizationPose) {
             -nav_marker_position[1]
         );
         navGraphEntity.appendChild(nav_marker_entity);
-        
     }
+
+    // Add nav edges to the navGraphEntity
+    for (let i = 0; i < local_path.length - 1; i++) {
+        var this_nav_marker = local_path[i];
+        var next_nav_marker = local_path[i+1];
+
+        var start_position = this_nav_marker[1];
+        var end_position = next_nav_marker[1];
+
+        var nav_arrow_entity = document.createElement('a-entity');
+        // The navmarkers are in z-up coordinates, so we need to convert them to y-up
+        nav_arrow_entity.setAttribute('arrow', {
+            start: {x: start_position[0], y: start_position[2], z: -start_position[1]},
+            end: {x: end_position[0], y: end_position[2], z: -end_position[1]}
+        });
+        navGraphEntity.appendChild(nav_arrow_entity);
+    }
+    return navGraphEntity;
+}
+
+
+async function renderNavigationPath(localizationURL, localizationPose) {
+    var navigationPath = await getNavigationPath(localizationURL, localizationPose);
+    console.log(navigationPath);
+    navigationPath_debug = navigationPath;
+
+    // Create the navGraphEntity
+    var navGraphEntity = createNavGraphEntity(navigationPath);
 
     // Update the pose of the navGraphEntity
     apply_pose_matrix(navGraphEntity.object3D, localizationPose);
