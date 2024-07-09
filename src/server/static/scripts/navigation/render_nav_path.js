@@ -1,7 +1,5 @@
 const navigationAppURL = "/shortest_path";
 const target = "nunga_computer";
-var navigationPath_debug = 0;
-var position_debug = 0;
 
 const scene = document.querySelector('a-scene');
 
@@ -71,7 +69,6 @@ function createNavGraphEntity(navigationPath) {
 async function renderNavigationPath(localizationURL, localizationPose) {
     var navigationPath = await getNavigationPath(localizationURL, localizationPose);
     console.log(navigationPath);
-    navigationPath_debug = navigationPath;
 
     // Create the navGraphEntity
     var navGraphEntity = createNavGraphEntity(navigationPath);
