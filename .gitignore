@@ -7,3 +7,6 @@ temp*
 
 # Python compiled files
 *.pyc
+
+# Node modules
+node_modules
