@@ -1,5 +1,6 @@
 import { getCoarseLocation } from './coarse-location';
 import { Matrix4 } from '../types/three';
+import { arraytoMatrix4, transformPoseMatrix } from './pose-transform';
 
 async function localize(): Promise<Matrix4> {
     // Get coarse location
@@ -29,38 +30,12 @@ async function localize(): Promise<Matrix4> {
         // matrix4ToArray(cameraPose),
     )
 
-    console.log("Best Map Server:")
-    console.log(bestMapServer)
-
     if (!bestMapServer) {
         return new AFRAME.THREE.Matrix4();
     }
     let localizationPose = bestMapServer.getLatestLocalizationData().pose;
-    return arraytoMatrix4(localizationPose);
-}
-
-function transpose(matrix: number[][]): number[][] {
-    return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
-}
-
-function matrix4ToArray(matrix: Matrix4): number[][] {
-    let array: number[][] = [];
-    for (let i = 0; i < 4; i++) {
-        array.push(matrix.elements.slice(i * 4, i * 4 + 4));
-    }
-    array = transpose(array);
-    return array;
-}
-
-function arraytoMatrix4(array: number[][]): Matrix4 {
-    // Transpose to column-major format and then flatten
-    let arrayTranspose = transpose(array).flat();
-
-    // Create a new Matrix4
-    let matrix4 = new AFRAME.THREE.Matrix4();
-    matrix4.fromArray(arrayTranspose);
-
-    return matrix4;
+    let objectPose = transformPoseMatrix(arraytoMatrix4(localizationPose), cameraPose);
+    return objectPose;
 }
 
 export { localize };

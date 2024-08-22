@@ -6,7 +6,7 @@ initialize();
 
 // Poll for localization every 5 seconds
 setInterval(() => {
-    localize().then((cameraPose) => {
+    localize().then((objectPose) => {
         let debugText = "";
         for (let mapServerName in globalThis.discoveryObj.mapServers) {
             let mapServer: MapServer = globalThis.discoveryObj.mapServers[mapServerName];
