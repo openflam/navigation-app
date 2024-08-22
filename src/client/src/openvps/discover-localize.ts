@@ -1,8 +1,14 @@
 import { getCoarseLocation } from './coarse-location';
 import { Matrix4 } from '../types/three';
 import { arraytoMatrix4, transformPoseMatrix } from './pose-transform';
+import { MapServer } from '@openvps/dnsspatialdiscovery';
 
-async function localize(): Promise<Matrix4> {
+interface LoalizationResult {
+    objectPose: Matrix4;
+    mapServer: MapServer;
+}
+
+async function localize(): Promise<LoalizationResult | null> {
     // Get coarse location
     let coarseLocation = await getCoarseLocation();
     if (!coarseLocation) {
@@ -31,11 +37,14 @@ async function localize(): Promise<Matrix4> {
     )
 
     if (!bestMapServer) {
-        return new AFRAME.THREE.Matrix4();
+        return null;
     }
     let localizationPose = bestMapServer.getLatestLocalizationData().pose;
     let objectPose = transformPoseMatrix(arraytoMatrix4(localizationPose), cameraPose);
-    return objectPose;
+    return {
+        objectPose: objectPose,
+        mapServer: bestMapServer
+    };
 }
 
-export { localize };
+export { localize, LoalizationResult };
