@@ -28,4 +28,7 @@ export function initialize() {
             globalThis.cameraCapture = new WebXRCameraCapture(sceneEl);
         });
     }
+
+    // Intialize the best localization result object
+    globalThis.mapInfoDict = {};
 }

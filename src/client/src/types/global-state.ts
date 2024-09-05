@@ -24,4 +24,7 @@ declare global {
 
     // debug element
     var debugEl: Entity;
+
+    // Best localization result
+    var mapInfoDict: MapInfoDict;
 }

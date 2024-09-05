@@ -1,29 +1,52 @@
 import { WayPoint } from "@openvps/dnsspatialdiscovery";
 import type { Matrix4, Object3D } from "three";
 import type { LoalizationResult } from "../openvps/discover-localize";
+import { getRandomColor } from "./random-color-generator";
 
 async function renderNavPath(localizationResult: LoalizationResult) {
+    // Do not change anything if the confidence of the latest localization result is lower than
+    // the best result so far.
+    let mapServerName = localizationResult.mapServer.name;
+    let latestLocalizationConfidence = localizationResult.mapServer.getLatestLocalizationData().serverConfidence;
+
+    if (mapServerName in globalThis.mapInfoDict &&
+        globalThis.mapInfoDict[mapServerName].highestLocalizationConfidence >= latestLocalizationConfidence
+    ) {
+        return;
+    }
+
+    // Update the highest localization confidence
+    if (mapServerName in globalThis.mapInfoDict) {
+        globalThis.mapInfoDict[mapServerName].highestLocalizationConfidence = latestLocalizationConfidence;
+    }
+    else {
+        globalThis.mapInfoDict[mapServerName] = {
+            highestLocalizationConfidence: latestLocalizationConfidence,
+            waypointColor: getRandomColor(),
+        };
+    }
+
     // Fecth waypoints from the server
     let waypoints = await localizationResult.mapServer.queryWaypoints();
 
     // Create the waypointsGraph entity
-    var waypointsGraphEntity = createWaypointsGraphEntity(waypoints);
+    var waypointsGraphEntity = createWaypointsGraphEntity(waypoints, mapServerName);
 
     // Apply the object pose to the waypointsGraph entity
     applyPoseMatrix(waypointsGraphEntity.object3D, localizationResult.objectPose);
 
     // If the navGraph already exists, remove it
-    var oldwaypointsGraphEntity = document.getElementById('waypoints-graph');
+    var oldwaypointsGraphEntity = document.getElementById(`waypoints-graph-${mapServerName}`);
     if (oldwaypointsGraphEntity) {
         globalThis.scene.removeChild(oldwaypointsGraphEntity);
     }
     globalThis.scene.appendChild(waypointsGraphEntity);
 }
 
-function createWaypointsGraphEntity(waypoints: WayPoint[]) {
+function createWaypointsGraphEntity(waypoints: WayPoint[], mapServerName: string) {
     // Generate waypoints graph root entitrt
     var waypointsGraphEntity = document.createElement('a-entity');
-    waypointsGraphEntity.setAttribute('id', 'waypoints-graph');
+    waypointsGraphEntity.setAttribute('id', `waypoints-graph-${mapServerName}`);
 
     // Add the waypoints to the waypoints graph entity
     waypoints.forEach(waypoint => {
@@ -31,7 +54,11 @@ function createWaypointsGraphEntity(waypoints: WayPoint[]) {
         waypointEntity.setAttribute('id', waypoint.name);
 
         // Set the waypoint component attributes
-        waypointEntity.setAttribute('waypoint', { name: waypoint.name });
+        let waypointColor = getRandomColor();
+        if (mapServerName in globalThis.mapInfoDict) {
+            waypointColor = globalThis.mapInfoDict[mapServerName].waypointColor;
+        }
+        waypointEntity.setAttribute('waypoint', { name: waypoint.name, color: waypointColor });
 
         // Set the position of the waypoints
         waypointEntity.object3D.position.set(
