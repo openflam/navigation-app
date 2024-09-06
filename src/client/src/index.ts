@@ -1,7 +1,7 @@
 import { initialize } from "./initialize";
 import { localize } from "./openvps/discover-localize";
 import { updateDebugText } from "./utils/update-debug-text";
-import { renderNavPath } from "./render-navpath/render-navpath";
+import { renderNavigationPath } from "./render/render-navpath";
 
 
 initialize();
@@ -10,6 +10,6 @@ initialize();
 setInterval(() => {
     localize().then((localizationResult) => {
         updateDebugText();
-        renderNavPath(localizationResult);
+        renderNavigationPath(localizationResult);
     });
 }, 5000);

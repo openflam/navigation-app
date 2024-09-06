@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 
+
 def get_closest_node_in_df(position, this_map_df):
     """
     Given a 3D position (the user's position) and an intra-map dataframe,
@@ -18,6 +19,7 @@ def get_closest_node_in_df(position, this_map_df):
             closest_node = node
     return closest_node
 
+
 def path_from_source_to_dest(position, target, mapname, mapname_to_df, G):
     """
     Given user's position and their target (which can be from a different map),
@@ -29,14 +31,14 @@ def path_from_source_to_dest(position, target, mapname, mapname_to_df, G):
 
     global_shortest_path = nx.shortest_path(G, source, target)
 
-    # Get the prefix of the global path 
+    # Get the prefix of the global path
     # that is part of this map
     this_map_nodes = []
     for node in global_shortest_path:
         if node in this_map_df.index:
             this_map_nodes.append(node)
         else:
-            break # Break as soon as a switch to another map is encountered
+            break  # Break as soon as a switch to another map is encountered
 
     path = []
     for node in this_map_nodes:

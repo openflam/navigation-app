@@ -4,6 +4,9 @@ import { SceneXR } from "./aframe";
 import { Entity, THREE } from "aframe";
 
 declare global {
+    // Destination waypoint. Set in server/templates/aframe.html
+    var destinationWaypoint: string;
+
     // MapServer instance for the selected map
     var discoveryObj: MapsDiscovery;
 

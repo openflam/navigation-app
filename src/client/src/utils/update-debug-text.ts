@@ -4,7 +4,7 @@ function updateDebugText() {
     if (activeServer) {
         let localizationData = activeServer.getLatestLocalizationData();
         if (localizationData) {
-            debugText += `Active Server: ${activeServer.name}: ${localizationData.localizationID}: ${globalThis.mapInfoDict[activeServer.name]}\n`;
+            debugText += `Active Server: ${activeServer.name}: ${localizationData.localizationID}: ${localizationData.serverConfidence}\n`;
         }
     }
     for (let mapServerName in globalThis.discoveryObj.mapServers) {
