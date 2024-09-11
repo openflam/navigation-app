@@ -6,10 +6,15 @@ import { renderNavigationPath } from "./render/render-navpath";
 
 initialize();
 
-// Poll for localization every 5 seconds
-setInterval(() => {
-    localize().then((localizationResult) => {
+// Poll for localization every 2 seconds
+async function pollLocalization() {
+    try {
+        let localizationResult = await localize();
         updateDebugText();
         renderNavigationPath(localizationResult);
-    });
-}, 5000);
+    } catch (e) { }
+
+    setTimeout(pollLocalization, 2000);
+}
+pollLocalization();
+

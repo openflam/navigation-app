@@ -5,7 +5,7 @@ import { SceneXR } from "./types/aframe";
 export function initialize() {
     // Initialize the discovery object
     globalThis.discoveryObj = new MapsDiscovery('loc.arenaxr.org.');
-    discoveryObj.setServerConfidenceThreshold(100);
+    discoveryObj.setServerConfidenceThreshold(50);
 
     // Initialize the canvas
     globalThis.canvas = document.createElement('canvas');
